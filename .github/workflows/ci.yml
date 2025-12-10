@@ -42,14 +42,37 @@ jobs:
           name: next-build
           path: .next
 
-  deploy:
+deploy:
+    needs: build-and-test
     runs-on: ubuntu-latest
-    container: 
-      image: node:20
+    if: github.ref == 'refs/heads/main' && needs.build-and-test.result == 'success'
     steps:
-      -uses: action/checkout@v4
-         with:
-         node-version: 20
-      -run: npm ci
-      -run: npm run build
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next
+
+      - name: Deploy to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ".next,package.json,package-lock.json,node_modules"
+          target: "/home/ubuntu/portfolio"
+
+      - name: Restart app
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/portfolio
+            npm ci
+            pm2 restart portfolio || pm2 start npm --name "portfolio" -- start
       
