@@ -41,3 +41,15 @@ jobs:
         with:
           name: next-build
           path: .next
+
+  deploy:
+    runs-on: ubuntu-latest
+    container: 
+      image: node:20
+    steps:
+      -uses: action/checkout@v4
+         with:
+         node-version: 20
+      -run: npm ci
+      -run: npm run build
+      
