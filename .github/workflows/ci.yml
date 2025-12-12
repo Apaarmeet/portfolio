@@ -40,21 +40,27 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: next-build
-          path: .next
+          path: |
+            .next/
+            public/
+            package.json
+            package-lock.json
+            next.config.ts
+          retention-days: 1
 
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && needs.build-and-test.result == 'success'
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: next-build
-          path: .next
+          path: .
 
       - name: Deploy to EC2
         uses: appleboy/scp-action@v0.1.7
