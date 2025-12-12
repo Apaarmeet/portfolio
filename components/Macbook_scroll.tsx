@@ -10,7 +10,7 @@ export function Macbook_Scroll() {
                         Welcome to the world of Apaarmeet .
                     </span>
                 }
-                src={`/linear.webp`}
+                
                 showGradient={false}
             />
         </div>
