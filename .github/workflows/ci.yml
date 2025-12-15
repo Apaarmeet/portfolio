@@ -20,6 +20,6 @@ on:
           with:
             host: 13.233.64.133
             username: ubuntu
-            key: ${{ secrets.PRIVATE_SSH_KEY }}
+            key: ${{ PRIVATE_SSH_KEY }}
             port: 22
             script: whoami
