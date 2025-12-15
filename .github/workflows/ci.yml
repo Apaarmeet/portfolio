@@ -9,7 +9,11 @@ on:
 jobs:
   deploy:
     name: Deploy to EC2
+    runs-on: ubuntu-latest
     steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
       - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@v1
         with:
@@ -18,8 +22,4 @@ jobs:
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
-             cd portfolio
-             git pull origin main
-             npm install
-             npm run build
-             npm run start
+            ./deploy.sh
