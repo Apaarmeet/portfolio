@@ -10,7 +10,7 @@ export function Macbook_Scroll() {
                         Welcome to the world of Apaarmeet .
                     </span>
                 }
-                src={"./me.jpg"}
+                src={"./me.svg"}
                
                 
                 showGradient={false}
